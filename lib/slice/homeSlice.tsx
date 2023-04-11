@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { BASE_URL, API_KEY } from "../baseApi";
 import { useAppDispatch } from "../store";
-import { getData, onError, onResponse } from "../actions/homeAction";
+import { getData } from "../actions/homeAction";
 
 interface HomeState {
     data: any[],
@@ -27,16 +27,17 @@ const homeSlice = createSlice({
     initialState,
     reducers: {
         getData: (state) => {
-            state.isLoading = true
+            //state.isLoading = true
             fetch(BASE_URL + 'movie/popular?language=en-US&page=' + state.page + '&api_key=' + API_KEY)
                 .then(response => response.json())
                 .then(json => {
-                    state.data.push(json) // sử dụng state.data.push thay vì dispatch(onResponse(json))
+                    state.data.push(json.results) // sử dụng state.data.push thay vì dispatch(onResponse(json))
                     state.isLoading = false // sử dụng state.isLoading thay vì dispatch(onResponse(json))
                 })
                 .catch(error => {
-                    state.error = error // sử dụng state.error thay vì dispatch(onError(error))
-                    state.isLoading = false // sử dụng state.isLoading thay vì dispatch(onError(error))
+                    console.log(error)
+                    //state.error = error // sử dụng state.error thay vì dispatch(onError(error))
+                    //state.isLoading = false // sử dụng state.isLoading thay vì dispatch(onError(error))
                 });
         },
         onLoadMore: (state) => {

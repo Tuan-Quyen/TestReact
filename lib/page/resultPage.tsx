@@ -1,10 +1,10 @@
+import React, { useState } from "react";
 import { View, Text, Button, StyleSheet } from "react-native";
 import { useAppSelector } from "../store";
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import SearchBar from "../components/searchBar";
 import { HOME_ROUTE, RootStackParamList } from "../type/routeType";
-import { useState } from "react";
 
 const ResultPage = () => {
     const [searchValue, setSearchValue] = useState('');

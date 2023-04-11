@@ -1,3 +1,4 @@
+import React from "react";
 import { View, Text, TextInput, Button, StyleSheet } from "react-native";
 import { useAppDispatch, useAppSelector } from "../store";
 import { decrease, increase, inputValue } from "../actions/counterAction";

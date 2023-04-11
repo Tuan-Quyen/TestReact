@@ -1,5 +1,5 @@
-import { useEffect } from 'react';
-import { AppState, StyleSheet } from 'react-native';
+import React, { useEffect } from 'react';
+import { AppState } from 'react-native';
 import store from './lib/store';
 import { Provider } from 'react-redux';
 import CounterPage from './lib/page/counterPage';
@@ -25,7 +25,7 @@ const App = () => {
 
   return <Provider store={store}>
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="Counter">
+      <Stack.Navigator initialRouteName={HOME_ROUTE}>
         <Stack.Screen name={HOME_ROUTE} component={HomePage} options={styles().homeStyle} />
         <Stack.Screen name={COUNTER_ROUTE} component={CounterPage} options={styles().counterStyle} />
         <Stack.Screen name={RESULT_ROUTE} component={ResultPage} options={styles().counterStyle} />

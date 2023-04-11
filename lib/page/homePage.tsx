@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import React, { useEffect } from "react";
 import { View, ActivityIndicator, FlatList, StyleSheet, RefreshControl } from "react-native";
 import MovieItem from "../components/movieItem";
 import { useAppSelector, useAppDispatch } from "../store";
