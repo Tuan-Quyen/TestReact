@@ -1,7 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { BASE_URL, API_KEY } from "../baseApi";
-import { useAppDispatch } from "../store";
-import { getData } from "../actions/homeAction";
+import { fetchMovie } from "../thunk/movieThunk";
 
 interface HomeState {
     data: any[],
@@ -11,7 +9,6 @@ interface HomeState {
     isLoading: boolean
 }
 
-// Define the initial state using that type
 const initialState: HomeState = {
     data: [],
     page: 1,
@@ -19,42 +16,35 @@ const initialState: HomeState = {
     error: '',
     isLoading: false
 }
-// Define dispatch
-//const dispatch = useAppDispatch();
 
 const homeSlice = createSlice({
     name: 'HOME',
     initialState,
     reducers: {
-        getData: (state) => {
-            //state.isLoading = true
-            fetch(BASE_URL + 'movie/popular?language=en-US&page=' + state.page + '&api_key=' + API_KEY)
-                .then(response => response.json())
-                .then(json => {
-                    state.data.push(json.results) // sử dụng state.data.push thay vì dispatch(onResponse(json))
-                    state.isLoading = false // sử dụng state.isLoading thay vì dispatch(onResponse(json))
-                })
-                .catch(error => {
-                    console.log(error)
-                    //state.error = error // sử dụng state.error thay vì dispatch(onError(error))
-                    //state.isLoading = false // sử dụng state.isLoading thay vì dispatch(onError(error))
-                });
-        },
         onLoadMore: (state) => {
             state.page += 1
-            // sử dụng fetchData thay vì dispatch(getData())
-            state.isLoading = true
-            getData()
         },
         onRefresh: (state) => {
-            state.page = 0
+            state.page = 1
             state.totalPage = 0
             state.data = []
-            // sử dụng fetchData thay vì dispatch(getData())
-            state.isLoading = true
-            getData()
         }
-    }
+    },
+    extraReducers: (builder) => {
+        builder.addCase(fetchMovie.pending, (state) => {
+            if (state.page == 1) {
+                state.isLoading = true
+            }
+            state.error = ''
+        }).addCase(fetchMovie.fulfilled, (state, action) => {
+            state.data = state.data.concat(...action.payload['results'])
+            state.totalPage = action.payload['total_pages']
+            state.isLoading = false
+        }).addCase(fetchMovie.rejected, (state, action) => {
+            state.error = action.error.message!
+            state.isLoading = false
+        })
+    },
 })
 
 export const actions = homeSlice.actions;
