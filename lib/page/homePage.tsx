@@ -1,24 +1,24 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { View, ActivityIndicator, FlatList, StyleSheet, RefreshControl } from "react-native";
 import MovieItem from "../components/movieItem";
 import { useAppSelector, useAppDispatch } from "../store";
-import { onFetch, onLoadMore, onRefresh } from "../actions/homeAction";
+import { fetchMovie } from "../thunk/movieThunk";
 
 const HomePage = () => {
     const slice = useAppSelector(state => state.home);
     const dispatch = useAppDispatch();
 
     useEffect(() => {
-        onFetch(dispatch)
+        handleRefresh()
     }, []);
 
     const handleRefresh = () => {
-        onRefresh(dispatch)
+        dispatch(fetchMovie(1))
     }
 
     const handleLoadMore = () => {
         if (slice.page < slice.totalPage) {
-            onLoadMore(slice.page + 1, dispatch)
+            dispatch(fetchMovie(slice.page + 1))
         }
     }
 
@@ -44,6 +44,7 @@ const HomePage = () => {
                             :
                             null
                         )}
+                        keyExtractor={(item, index) => index.toString()}
                     />
                 </View>
             )}

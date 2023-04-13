@@ -1,11 +1,11 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { fetchMovie } from "../thunk/movieThunk";
+import { Alert } from "react-native";
 
 interface HomeState {
     data: any[],
     page: number,
     totalPage: number,
-    error: string,
     isLoading: boolean
 }
 
@@ -13,37 +13,41 @@ const initialState: HomeState = {
     data: [],
     page: 1,
     totalPage: 0,
-    error: '',
     isLoading: false
+}
+
+const showAlert = (message: string) => {
+    Alert.alert('Unable to interact with server!',
+        `Error: ${message}`,
+        [
+            { text: 'OK', onPress: () => console.log('OK Pressed') }
+        ])
 }
 
 const homeSlice = createSlice({
     name: 'HOME',
     initialState,
-    reducers: {
-        onLoadMore: (state) => {
-            state.page += 1
-        },
-        onRefresh: (state) => {
-            state.page = 1
-            state.totalPage = 0
-            state.data = []
-        }
-    },
+    reducers: {},
     extraReducers: (builder) => {
-        builder.addCase(fetchMovie.pending, (state) => {
-            if (state.page == 1) {
+        builder.addCase(fetchMovie.pending, (state, action) => {
+            //init loading status: handle action for fetch movie.
+            if (action.meta.arg == 1) {
                 state.isLoading = true
+                state.totalPage = 0
+                state.data = []
             }
-            state.error = ''
         }).addCase(fetchMovie.fulfilled, (state, action) => {
-            state.data = state.data.concat(...action.payload['results'])
+            state.data.push(...action.payload['results'])
             state.totalPage = action.payload['total_pages']
+            state.page += 1
             state.isLoading = false
-        }).addCase(fetchMovie.rejected, (state, action) => {
-            state.error = action.error.message!
-            state.isLoading = false
-        })
+        }).addMatcher(
+            (action) => action.type.includes('rejected'),
+            (state, action) => {
+                showAlert(action.payload)
+                state.isLoading = false
+            }
+        )
     },
 })
 
