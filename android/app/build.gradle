@@ -165,6 +165,10 @@ dependencies {
     } else {
         implementation jscFlavor
     }
+    //Mapbox
+    implementation ('com.mapbox.maps:android:10.12.1'){
+        exclude group: 'group_name', module: 'module_name'
+    }
 }
 
 apply from: file("../../node_modules/@react-native-community/cli-platform-android/native_modules.gradle"); applyNativeModulesAppBuildGradle(project)
