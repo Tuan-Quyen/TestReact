@@ -2,12 +2,13 @@ import React, { useEffect } from 'react';
 import { AppState } from 'react-native';
 import store from './lib/store';
 import { Provider } from 'react-redux';
-import CounterPage from './lib/page/counterPage';
-import HomePage from './lib/page/homePage';
-import ResultPage from './lib/page/resultPage';
 import { NavigationContainer } from '@react-navigation/native';
+import { HOME_ROOT, LOGIN_ROUTE, RESULT_ROUTE, RootStackParamList } from './lib/type/routeType';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { COUNTER_ROUTE, HOME_ROUTE, RESULT_ROUTE, RootStackParamList } from './lib/type/routeType';
+import LoginPage from './lib/page/loginPage';
+import ResultPage from './lib/page/resultPage';
+import { HomeStack } from './lib/utils/stack';
+import { counterStyle } from './lib/utils/style';
 
 const App = () => {
   useEffect(() => {
@@ -25,40 +26,13 @@ const App = () => {
 
   return <Provider store={store}>
     <NavigationContainer>
-      <Stack.Navigator initialRouteName={HOME_ROUTE}>
-        <Stack.Screen name={HOME_ROUTE} component={HomePage} options={styles().homeStyle} />
-        <Stack.Screen name={COUNTER_ROUTE} component={CounterPage} options={styles().counterStyle} />
-        <Stack.Screen name={RESULT_ROUTE} component={ResultPage} options={styles().counterStyle} />
+      <Stack.Navigator initialRouteName={LOGIN_ROUTE} screenOptions={counterStyle}>
+        <Stack.Screen name={LOGIN_ROUTE} component={LoginPage} />
+        <Stack.Screen name={HOME_ROOT} component={HomeStack} options={{ headerShown: false }} />
+        <Stack.Screen name={RESULT_ROUTE} component={ResultPage} />
       </Stack.Navigator>
     </NavigationContainer>
   </Provider>;
 };
-
-function styles(): any {
-  let header = ({
-    headerTitleStyle: {
-      color: "#FFFFFF",
-      fontWeight: "bold",
-      fontSize: 18,
-    },
-    headerTintColor: '#FFFFFF',
-  })
-  return {
-    counterStyle: {
-      headerTitleStyle: header.headerTitleStyle,
-      headerTintColor: header.headerTintColor,
-      headerStyle: {
-        backgroundColor: '#ff8080'
-      }
-    },
-    homeStyle: {
-      headerTitleStyle: header.headerTitleStyle,
-      headerTintColor: header.headerTintColor,
-      headerStyle: {
-        backgroundColor: '#0099ff'
-      }
-    }
-  }
-}
 
 export default App;
