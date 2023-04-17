@@ -1,11 +1,11 @@
-import React, { useEffect } from "react"
+import React from "react"
 import { StyleSheet, View } from "react-native"
 import Mapbox from "@rnmapbox/maps";
+import { MAP_ACCESS_KEY } from "../baseApi";
+
+Mapbox.setAccessToken(MAP_ACCESS_KEY)
 
 const MapPage = () => {
-    useEffect(() => {
-        Mapbox.setConnected(true);
-    })
 
     return (
         <View style={styles.container}>
